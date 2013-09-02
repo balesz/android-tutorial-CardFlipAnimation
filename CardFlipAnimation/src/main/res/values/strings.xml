@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">CardFlipAnimation</string>
+    <string name="app_name">Tutorial-CardFlipAnimation</string>
     <string name="action_about">About</string>
     <string name="frontText">FRONT</string>
     <string name="backText">BACK</string>
