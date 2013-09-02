@@ -1,0 +1,2 @@
+android-tutorial-CardFlipAnimation
+==================================
