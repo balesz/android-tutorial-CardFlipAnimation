@@ -1,0 +1,92 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.5.+'
+    }
+}
+
+apply plugin: 'android'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'com.android.support:support-v4:18.0.+'
+    compile 'com.android.support:appcompat-v7:18.0.+'
+    compile 'com.google.guava:guava:14.0.+'
+}
+
+def keyStoreDir = "$System.env.HOME".concat('/Projects/_keystore/')
+
+android {
+    compileSdkVersion 18
+    buildToolsVersion "18.0.1"
+
+    defaultConfig {
+        packageName 'net.solutinno.template'
+        versionCode 1
+        versionName '1.0'
+        minSdkVersion 10
+        targetSdkVersion 15
+    }
+
+    signingConfigs {
+        release {
+            storeFile file('asdf')
+            keyAlias 'asdf'
+            storePassword 'asdf'
+            keyPassword 'asdf'
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+        }
+        debug {
+            packageNameSuffix '.debug'
+            versionNameSuffix '-debug'
+        }
+    }
+}
+
+initKeyStore()
+
+
+def initKeyStore() {
+    if (getStoreFile() != null && getKeyAlias() != null) {
+        android.signingConfigs.release.storeFile = getStoreFile()
+        android.signingConfigs.release.storePassword = getStorePassword()
+        android.signingConfigs.release.keyAlias = getKeyAlias()
+        android.signingConfigs.release.keyPassword = getKeyPassword()
+        android.buildTypes.release.signingConfig = android.signingConfigs.release
+    }
+}
+
+def String getKeyStorePath() {
+    String result = System.getenv('KEYSTORE_PATH')
+    return result == null ? "" : result
+}
+def File getStoreFile() {
+    File file = new File(getKeyStorePath().concat('android-keystore.jks'))
+    if (file.exists()) return file
+    else return null
+}
+def String getStorePassword() {
+    File file = new File(getKeyStorePath().concat("storePassword"))
+    if (file.exists()) return file.readLines().get(0)
+    else return null
+}
+def String getKeyAlias() {
+    File file = new File(getKeyStorePath().concat("keyPassword-").concat(android.defaultConfig.packageName))
+    if (file.exists()) return android.defaultConfig.packageName
+    else return null
+}
+def String getKeyPassword() {
+    File file = new File(getKeyStorePath().concat("keyPassword-").concat(getKeyAlias()))
+    if (file.exists()) return file.readLines().get(0)
+    else return null
+}
