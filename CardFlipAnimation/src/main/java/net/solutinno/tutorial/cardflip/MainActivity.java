@@ -8,6 +8,9 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.View;
 
+import com.nineoldandroids.animation.AnimatorSet;
+import com.nineoldandroids.animation.ObjectAnimator;
+
 public class MainActivity extends ActionBarActivity implements View.OnClickListener {
 
     private static final int DURATION = 400;
@@ -41,7 +44,18 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     }
 
     public void flip(final View front, final View back, final int duration) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB_MR1) {
+            AnimatorSet set = new AnimatorSet();
+            set.playSequentially(
+                ObjectAnimator.ofFloat(front, "rotationY", 90).setDuration(duration / 2),
+                ObjectAnimator.ofInt(front, "visibility", View.GONE).setDuration(0),
+                ObjectAnimator.ofFloat(back, "rotationY", -90).setDuration(0),
+                ObjectAnimator.ofInt(back, "visibility", View.VISIBLE).setDuration(0),
+                ObjectAnimator.ofFloat(back, "rotationY", 0).setDuration(duration / 2)
+            );
+            set.start();
+        }
+        else {
             front.animate().rotationY(90).setDuration(duration / 2).setListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
@@ -52,11 +66,6 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                 }
             });
         }
-        else {
-            front.setVisibility(View.GONE);
-            back.setVisibility(View.VISIBLE);
-        }
     }
-
 }
 
