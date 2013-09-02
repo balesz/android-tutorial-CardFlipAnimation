@@ -44,7 +44,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     }
 
     public void flip(final View front, final View back, final int duration) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB_MR1) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
             AnimatorSet set = new AnimatorSet();
             set.playSequentially(
                 ObjectAnimator.ofFloat(front, "rotationY", 90).setDuration(duration / 2),
